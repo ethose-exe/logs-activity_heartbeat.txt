@@ -2,18 +2,21 @@ name: daily_activity_hack
 
 on:
   schedule:
-    - cron: '0 18 * * *' # Runs every day at 6:00 PM
-  workflow_dispatch: # Allows you to run it manually for testing
+    - cron: '0 18 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Explicitly granting write access
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4  # Updated to v4 to fix the warning
 
       - name: Update Heartbeat
         run: |
+          mkdir -p logs
           echo "Last heartbeat: $(date)" > logs/activity_heartbeat.txt
 
       - name: Commit changes
