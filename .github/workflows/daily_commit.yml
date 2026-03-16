@@ -1,0 +1,25 @@
+name: daily_activity_hack
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # Runs every day at 6:00 PM
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update Heartbeat
+        run: |
+          echo "Last heartbeat: $(date)" > logs/activity_heartbeat.txt
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add logs/activity_heartbeat.txt
+          git commit -m "sys.log: automated_heartbeat_check" || exit 0
+          git push
